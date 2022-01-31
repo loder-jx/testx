@@ -1,0 +1,330 @@
+
+function 调试输出(log){
+	console.info(log);
+};
+function 设置标题(T){
+	document.title = T;
+};
+function 获取文件后缀名(filename){
+	if(!filename||typeof filename!='string'){
+		return false
+	};
+	var a = filename.split('').reverse().join('');
+	var b = a.substring(0,a.search(/\./)).split('').reverse().join('');
+	return b
+};
+function 文本_取出中间文本(文本,左边文本,右边文本,偏移){
+	if(偏移 == null || 偏移 == ""){
+		偏移 = 1;
+	};
+	var 左边位置 = 文本操作.寻找文本(文本,左边文本,0);
+	var 右边位置 = 文本操作.寻找文本(文本,右边文本,左边位置+偏移);
+	return 文本操作.取文本中间(文本,左边位置 + 文本操作.取文本长度(左边文本),右边位置-左边位置-文本操作.取文本长度(左边文本));
+};
+function 获取协议头(){
+	var E = "https:" == document.location.protocol ?  "https" : "http";
+	return E;
+};
+function 删除默认CSS(){
+	$("link[href='css/mui.min.css']").remove();
+	$("link[href='css/icons-extra.css']").remove();
+};
+function 获取Cookie(cname){
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0; i<ca.length; i++) {
+	var c = ca[i].trim();
+		if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+	}
+	return "";
+};
+function 时间戳格式转换(timestamp,timea){
+	var date = new Date(timestamp * timea);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+	var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+	var D = date.getDate() + ' ';
+	var h = date.getHours() + ':';
+	var m = date.getMinutes() + ':';
+	var s = date.getSeconds();
+	return Y+M+D+h+m+s;
+};
+function 获取父目录名(url){
+    var url = url.substr(url.lastIndexOf('/', url.lastIndexOf('/') - 1) + 1);
+    var site = url.lastIndexOf("\/");
+    return url.substring(0, site);
+}
+function 获取Cookie_New(c_name){
+	var 最终Cookie = "";
+	cname = c_name;
+    if (document.cookie.length>0){ 
+        console.log(document.cookie);
+        c_start=document.cookie.indexOf(c_name + "=");
+        if (c_start!=-1){ 
+            c_start=c_start + c_name.length+1; 
+            c_end=document.cookie.indexOf(";",c_start);
+            if (c_end==-1) c_end=document.cookie.length;
+            最终Cookie = unescape(document.cookie.substring(c_start,c_end));
+        } 
+    }
+	if(最终Cookie == ""){
+		var name = cname + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0; i<ca.length; i++) {
+		var c = ca[i].trim();
+			if (c.indexOf(name)==0) 最终Cookie = c.substring(name.length,c.length);
+		};
+	};
+    return 最终Cookie;
+};
+function 复制文本到剪贴板(text,callback){
+	var tag = document.createElement('input');
+	tag.setAttribute('id', 'cp_hgz_input');
+	tag.value = text;
+	document.getElementsByTagName('body')[0].appendChild(tag);
+	document.getElementById('cp_hgz_input').select();
+	document.execCommand('copy');
+	document.getElementById('cp_hgz_input').remove();
+	if(callback) {callback(text);};
+};
+function 刷新当前页面(){
+	history.go(0);
+};
+function 只取数字(txt){
+	if(txt == "" || txt == null){
+		return "";
+	};
+	return txt.replace(/[^0-9]/ig,"");
+};
+function 是否为数字(val) {
+    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+    if(regPos.test(val) || regNeg.test(val)) {
+		return '是';
+	} else {
+		return '不是';
+	}
+};
+function 获取GET(par){
+    var local_url = document.location.href; 
+    var get = local_url.indexOf(par +"=");
+    if(get == -1){
+        return false;   
+    }   
+    var get_par = local_url.slice(par.length + get + 1);    
+    var nextPar = get_par.indexOf("&");
+    if(nextPar != -1){
+        get_par = get_par.slice(0, nextPar);
+    }
+    return get_par;
+};
+function 是否为PC() {
+    var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone","SymbianOS", "Windows Phone","iPad", "iPod"];
+    var flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+        }
+    }
+    return flag;
+};
+function 跳转网址(Url){
+	window.location.href = Url;
+};
+function 获取域名(Test){
+	var ishttps = 'https:' == document.location.protocol ? true : false;
+	if(ishttps) {
+		var 协议 = "https:";
+	} else {
+		var 协议 = "http:";
+	};
+	var 网站端口 = window.location.port;
+	var 网站域名 = window.location.host;
+	var 网站网址 = window.location.href;
+	if(网站域名 == "127.0.0.1"){
+		网站端口 = "";
+		网站域名 = "";
+		网站网址 = "";
+	};
+	if(网站端口 != ""){
+		var 端口 = ":" + 网站端口;
+		if(网站域名 != ""){
+			var 域名 = 协议 + "//" + 网站域名;
+		}else{
+			var 域名 = 协议 + "//" + 文本_取出中间文本(网站网址,"://","/");
+		}
+		if(域名 == 协议 + "//"){
+			if(Test == 2){
+				return(协议 + "//" + "sheklong.com");
+			}else{
+				return(协议 + "//" + "javatest.sheklong.com");
+			};
+		}else{
+			return(域名);
+		};
+	}else{
+		if(网站域名 != ""){
+			var 域名 = 协议 + "//" + 网站域名;
+		}else{
+			var 域名 = 协议 + "//" + 文本_取出中间文本(网站网址,"://","/");
+		}
+		if(域名 == 协议 + "//"){
+			if(Test == 2){
+				return(协议 + "//" + "sheklong.com");
+			}else{
+				return(协议 + "//" + "javatest.sheklong.com");
+			};
+		}else{
+			return(域名);
+		};
+	};
+};
+function 文本替换(a,b,c){
+	if(c==null || a==null || b==null){
+	    return "";
+    }
+	return a.replace(b,c);
+};
+function 写Cookie(c_name,value,expiredays){
+    var cookieStr = "";
+    var exdate=new Date();
+    exdate.setDate(exdate.getDate()+expiredays);
+    document.cookie = c_name+ "=" +escape(value)+
+    ((expiredays==null) ? "" : "; expires="+exdate.toGMTString())+";path=/";
+};
+function 引入JS文件(JsSrc,call,tag){
+	var script = document.createElement("script");
+	script.type = "text/javascript";
+	script.charset = "UTF-8";
+	if(tag == "" || tag == null || tag == "undefined"){
+		tag = "";
+	};
+	script.setAttribute("tag",tag);
+	script.src = JsSrc;
+	window["JsSrc_"+JsSrc] = setInterval(function () {
+		if(document.getElementsByTagName('head').length > 0){
+			clearInterval(window["JsSrc_"+JsSrc]);
+			document.getElementsByTagName('head')[0].appendChild(script);
+			script.onload = function(){
+				if(typeof call == 'function'){
+					call();
+				};
+			};
+		};
+	}, 100);
+};
+
+mui.init({swipeBack: false,gestureConfig: {tap:true,doubletap:true,longtap:true,hold:true,release:true}});
+
+var 标题栏1 = new 标题栏("标题栏1",null,null,null);
+var 标签1 = new 标签("标签1",null);
+var 编辑框1 = new 编辑框("编辑框1",null,null,null,null,null);
+var 标签2 = new 标签("标签2",null);
+var 按钮1 = new 按钮("按钮1",按钮1_被单击,null,null);
+
+function 按钮1_被单击(){
+	if(编辑框1.取内容() == "JYX" ){
+		标签2.置标题("江永兴");
+				}else if(编辑框1.取内容()=="nst" ){
+		标签2.置标题("倪疏桐");
+		}else if(编辑框1.取内容()=="whq" ){
+		标签2.置标题("汪含青");
+		}else if(编辑框1.取内容()=="hzy" ){
+		标签2.置标题("何章勇");
+		}else if(编辑框1.取内容()=="qwj" ){
+		标签2.置标题("钱文静");
+		}else if(编辑框1.取内容()=="wjj" ){
+		标签2.置标题("王家佳");
+		}else if(编辑框1.取内容()=="zm" ){
+		标签2.置标题("赵敏");
+		}else if(编辑框1.取内容()=="wdd" ){
+		标签2.置标题("吴丹丹");
+		}else if(编辑框1.取内容()=="yxh" ){
+		标签2.置标题("叶昕辉");
+		}else if(编辑框1.取内容()=="zjl" ){
+		标签2.置标题("朱嘉丽");
+		}else if(编辑框1.取内容()=="zhx" ){
+		标签2.置标题("祝晗希");
+		}else if(编辑框1.取内容()=="hzb" ){
+		标签2.置标题("胡志博");
+		}else if(编辑框1.取内容()=="lx" ){
+		标签2.置标题("李欣14");
+		}else if(编辑框1.取内容()=="jsr" ){
+		标签2.置标题("江森荣");
+		}else if(编辑框1.取内容()=="yp" ){
+		标签2.置标题("袁萍");
+		}else if(编辑框1.取内容()=="zhq" ){
+		标签2.置标题("周鸿庆");
+		}else if(编辑框1.取内容()=="jmq" ){
+		标签2.置标题("江明清");
+		}else if(编辑框1.取内容()=="slc" ){
+		标签2.置标题("施连成");
+		}else if(编辑框1.取内容()=="hhy" ){
+		标签2.置标题("胡浩洋");
+		}else if(编辑框1.取内容()=="zq" ){
+		标签2.置标题("周倩");
+		}else if(编辑框1.取内容()=="jw" ){
+		标签2.置标题("江伟");
+		}else if(编辑框1.取内容()=="xff" ){
+		标签2.置标题("徐菲菲");
+		}else if(编辑框1.取内容()=="yq" ){
+		标签2.置标题("叶琪");
+		}else if(编辑框1.取内容()=="sqy" ){
+		标签2.置标题("施其阳");
+		}else if(编辑框1.取内容()=="yzs" ){
+		标签2.置标题("叶章顺");
+		}else if(编辑框1.取内容()=="yth" ){
+		标签2.置标题("严天慧");
+		}else if(编辑框1.取内容()=="fy" ){
+		标签2.置标题("房容");
+		}else if(编辑框1.取内容()=="wxq" ){
+		标签2.置标题("汪晓倩");
+		}else if(编辑框1.取内容()=="cxj" ){
+		标签2.置标题("陈新建");
+		}else if(编辑框1.取内容()=="czh" ){
+		标签2.置标题("陈忠侯");
+		}else if(编辑框1.取内容()=="ym" ){
+		标签2.置标题("殷明");
+		}else if(编辑框1.取内容()=="gy" ){
+		标签2.置标题("高颖");
+		}else if(编辑框1.取内容()=="th" ){
+		标签2.置标题("汤浩");
+		}else if(编辑框1.取内容()=="tjx" ){
+		标签2.置标题("谭锦祥");
+		}else if(编辑框1.取内容()=="pl" ){
+		标签2.置标题("潘靓");
+		}else if(编辑框1.取内容()=="wrp" ){
+		标签2.置标题("王睿鹏");
+		}else if(编辑框1.取内容()=="njm" ){
+		标签2.置标题("倪佳明");
+		}else if(编辑框1.取内容()=="zyt"){
+		标签2.置标题("张昳婷");
+		}else if(编辑框1.取内容()=="zy" ){
+		标签2.置标题("章晔");
+		}else if(编辑框1.取内容()=="wkk" ){
+		标签2.置标题("汪可可");
+		}else if(编辑框1.取内容()=="yzq" ){
+		标签2.置标题("杨泽琦");
+		}else if(编辑框1.取内容()=="zlj" ){
+		标签2.置标题("张丽娟");
+        }else if(编辑框1.取内容()=="ryx" ){
+		标签2.置标题("饶宇轩");
+        }else if(编辑框1.取内容()=="zyy" ){
+		标签2.置标题("朱盈盈");
+        }else if(编辑框1.取内容()=="wf" ){
+		标签2.置标题("王菲  ||  汪帆");
+        }else if(编辑框1.取内容()=="bxy" ){
+		标签2.置标题("鲍欣怡");
+        }else if(编辑框1.取内容()=="gcx" ){
+		标签2.置标题("桂存现");
+        }else if(编辑框1.取内容()=="wqm" ){
+		标签2.置标题("吴其苗");
+        }else if(编辑框1.取内容()=="zst" ){
+		标签2.置标题("朱思桐");
+		}else if(编辑框1.取内容()=="xjw" ){
+		标签2.置标题("徐经纬");
+		}else if(编辑框1.取内容()=="sxy" ){
+		标签2.置标题("盛欣怡");
+	}
+}
